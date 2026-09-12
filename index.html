@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<meta name="theme-color" content="#0a0e1a">
+<title>SMD Diode Code Explorer — Voltage Code Finder</title>
+
+<link rel="stylesheet" href="style.css"></head>
+<body>
+
+<div class="container">
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-logo" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#04111f" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 12h6"></path>
+          <path d="M9 7l8 5-8 5z" fill="#04111f"></path>
+          <path d="M17 7v10"></path>
+          <path d="M15 7v10"></path>
+          <path d="M17 12h4"></path>
+        </svg>
+      </div>
+      <div>
+        <h1>SMD Diode Code Explorer</h1>
+        <p>4–5 Character SMD Diode Speed, Current &amp; Voltage Finder</p>
+      </div>
+    </div>
+    <button class="icon-btn" id="themeToggle" title="Toggle theme" aria-label="Toggle theme">
+      <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+      </svg>
+    </button>
+  </header>
+
+  <!-- LIVE CODE DISPLAY -->
+  <section class="code-display" aria-label="Live SMD code display">
+    <div class="code-label"><span class="dot"></span> Live SMD Code</div>
+    <div class="code-box" id="codeBox">
+      <div class="code-cell" id="cell1"><span class="cell-label">SPEED</span><span class="cell-val">—</span></div>
+      <div class="code-cell" id="cell2"><span class="cell-label">CUR</span><span class="cell-val">—</span></div>
+      <div class="code-cell" id="cell3"><span class="cell-label">VLT</span><span class="cell-val">—</span></div>
+      <div class="code-cell" id="cell4"><span class="cell-label">—</span><span class="cell-val">—</span></div>
+    </div>
+    <div class="code-actions">
+      <button class="btn btn-primary" id="copyBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+        Copy Code
+      </button>
+      <button class="btn" id="favBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+        Favorite
+      </button>
+      <button class="btn btn-danger" id="resetBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
+        Reset
+      </button>
+    </div>
+  </section>
+
+  <!-- SEARCH -->
+  <section class="card">
+    <h2 class="card-title">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      Search SMD Code
+    </h2>
+    <p class="card-sub">Enter a code (e.g. SS2A or SS2T4) to identify its specifications.</p>
+    <div class="search-wrap">
+      <input type="text" class="search-input" id="searchInput" placeholder="Type code, e.g. SS2A or SS2T4" maxlength="5" autocomplete="off">
+      <button class="btn btn-primary" id="searchBtn">Lookup</button>
+    </div>
+    <div class="summary" id="searchResult"></div>
+  </section>
+
+  <!-- STEP 1: SPEED -->
+  <section class="selection-panel active" id="panel1">
+    <div class="card">
+      <h2 class="card-title"><span class="step">1</span> Select Diode Speed</h2>
+      <p class="card-sub">Choose the diode's speed / technology type. This sets the first two letters of the code.</p>
+      <div class="option-grid" id="speedGrid"></div>
+      <div class="summary" id="speedSummary"></div>
+    </div>
+  </section>
+
+  <!-- STEP 2: CURRENT -->
+  <section class="selection-panel" id="panel2">
+    <div class="card">
+      <h2 class="card-title"><span class="step">2</span> Select Diode Current</h2>
+      <p class="card-sub">Choose the forward current rating code (third character of the SMD code).</p>
+      <div class="option-grid" id="currentGrid"></div>
+      <div class="summary" id="currentSummary"></div>
+    </div>
+  </section>
+
+  <!-- STEP 3: VOLTAGE -->
+  <section class="selection-panel" id="panel3">
+    <div class="card">
+      <h2 class="card-title"><span class="step">3</span> Select Diode Voltage</h2>
+      <p class="card-sub">Choose the reverse voltage code (last character(s) of the SMD code). Codes I and L are reserved / not used.</p>
+      <div class="option-grid" id="voltageGrid"></div>
+      <div class="summary" id="voltageSummary"></div>
+    </div>
+  </section>
+
+  <!-- FINAL RESULT -->
+  <section class="result-card" id="resultCard">
+    <div class="result-header">
+      <div>
+        <h2>SMD Diode Result</h2>
+        <div class="result-code" id="resultCode">—</div>
+        <div class="result-type" id="resultType">—</div>
+      </div>
+      <div class="diode-symbol" aria-hidden="true">
+        <svg viewBox="0 0 140 60" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent)">
+          <line x1="5" y1="30" x2="40" y2="30"></line>
+          <polygon points="40,12 75,30 40,48" fill="currentColor" opacity="0.25"></polygon>
+          <polygon points="40,12 75,30 40,48"></polygon>
+          <line x1="75" y1="12" x2="75" y2="48"></line>
+          <line x1="82" y1="12" x2="82" y2="48"></line>
+          <line x1="82" y1="30" x2="135" y2="30"></line>
+        </svg>
+      </div>
+    </div>
+    <div class="result-grid">
+      <div class="badge speed">
+        <div class="b-label">⚡ Speed / Type</div>
+        <div class="b-value" id="resSpeed">—</div>
+      </div>
+      <div class="badge current">
+        <div class="b-label">🔌 Current</div>
+        <div class="b-value" id="resCurrent">—</div>
+      </div>
+      <div class="badge voltage">
+        <div class="b-label">⚡ Voltage</div>
+        <div class="b-value" id="resVoltage">—</div>
+      </div>
+      <div class="badge code">
+        <div class="b-label">📋 SMD Code</div>
+        <div class="b-value" id="resCode">—</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="history-section">
+    <h3>⭐ Favorite Codes</h3>
+    <div class="chips" id="favChips"><span class="empty">No favorites yet. Tap "Favorite" to save a code.</span></div>
+  </section>
+
+  <section class="history-section">
+    <h3>🕑 Recent Searches</h3>
+    <div class="chips" id="recentChips"><span class="empty">No recent searches.</span></div>
+  </section>
+
+  <footer>
+    <p>SMD Diode Code Explorer · Offline-capable · Built with HTML, CSS &amp; Vanilla JS</p>
+    <p>⚠️ Electrical ratings shown are placeholders. Verify against the manufacturer's datasheet before use.</p>
+  </footer>
+</div>
+
+<div class="toast" id="toast">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+  <span id="toastMsg">Copied!</span>
+</div>
+
+
+
+
+<script src="script.js"></script></body></html>
