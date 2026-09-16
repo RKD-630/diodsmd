@@ -1,5 +1,5 @@
 /* ============================================================
-   DATABASES
+   DIODE DATABASES (unchanged from previous version)
    ============================================================ */
 const speedMap = {
   "SS": { type: "Schottky Diode",          desc: "Low forward voltage drop, fast switching", isFR: false },
@@ -8,37 +8,41 @@ const speedMap = {
   "ES": { type: "Super Fast Diode",        desc: "Super-fast recovery, low reverse leakage", isFR: false },
   "FR": { type: "Fast Recovery Rectifier", desc: "FR series fast recovery, 50V–1000V",       isFR: true  }
 };
-
 const currentMap = {
   "1": { current: "1.0 A" }, "2": { current: "2.0 A" },
   "3": { current: "3.0 A" }, "4": { current: "4.0 A" }
 };
-
 const voltageMap = {
-  "A":  { voltage: "50 V",        used: true  },
-  "B":  { voltage: "100 V",       used: true  },
-  "C":  { voltage: "150 V",       used: true  },
-  "D":  { voltage: "200 V",       used: true  },
-  "E":  { voltage: "300 V",       used: true  },
-  "F":  { voltage: "300 – 500 V", used: true  },
-  "G":  { voltage: "400 V",       used: true  },
-  "H":  { voltage: "500 V",       used: true  },
-  "I":  { voltage: "Not used",    used: false },
-  "J":  { voltage: "600 V",       used: true  },
-  "K":  { voltage: "800 V",       used: true  },
-  "L":  { voltage: "Not used",    used: false },
-  "M":  { voltage: "1000 V",      used: true  },
-  "T4": { voltage: "30 V",        used: true  }
+  "A":  { voltage: "50 V",        used: true,  isDigit: false },
+  "B":  { voltage: "100 V",       used: true,  isDigit: false },
+  "C":  { voltage: "150 V",       used: true,  isDigit: false },
+  "D":  { voltage: "200 V",       used: true,  isDigit: false },
+  "E":  { voltage: "300 V",       used: true,  isDigit: false },
+  "F":  { voltage: "300 – 500 V", used: true,  isDigit: false },
+  "G":  { voltage: "400 V",       used: true,  isDigit: false },
+  "H":  { voltage: "500 V",       used: true,  isDigit: false },
+  "I":  { voltage: "Not used",    used: false, isDigit: false },
+  "J":  { voltage: "600 V",       used: true,  isDigit: false },
+  "K":  { voltage: "800 V",       used: true,  isDigit: false },
+  "L":  { voltage: "Not used",    used: false, isDigit: false },
+  "M":  { voltage: "1000 V",      used: true,  isDigit: false },
+  "T4": { voltage: "30 V",        used: true,  isDigit: false },
+  "0": { voltage: "0 V",   used: true, isDigit: true },
+  "1": { voltage: "10 V",  used: true, isDigit: true },
+  "2": { voltage: "20 V",  used: true, isDigit: true },
+  "3": { voltage: "30 V",  used: true, isDigit: true },
+  "4": { voltage: "40 V",  used: true, isDigit: true },
+  "5": { voltage: "50 V",  used: true, isDigit: true },
+  "6": { voltage: "60 V",  used: true, isDigit: true },
+  "7": { voltage: "70 V",  used: true, isDigit: true },
+  "8": { voltage: "80 V",  used: true, isDigit: true },
+  "9": { voltage: "90 V",  used: true, isDigit: true }
 };
-
 const frCurrentMap = {
-  "10": { current: "1.0 A", alt: "1" },
-  "15": { current: "1.5 A", alt: null },
-  "20": { current: "2.0 A", alt: "2" },
-  "30": { current: "3.0 A", alt: "3" },
+  "10": { current: "1.0 A", alt: "1" }, "15": { current: "1.5 A", alt: null },
+  "20": { current: "2.0 A", alt: "2" }, "30": { current: "3.0 A", alt: "3" },
   "60": { current: "6.0 A", alt: "6" }
 };
-
 const frVoltageMap = {
   "1": { voltage: "50 V"   }, "2": { voltage: "100 V"  },
   "3": { voltage: "200 V"  }, "4": { voltage: "400 V"  },
@@ -46,7 +50,6 @@ const frVoltageMap = {
   "7": { voltage: "1000 V" }
 };
 
-/* ---------- Builder DB ---------- */
 const diodeDatabase = {};
 for (const sc of Object.keys(speedMap)) {
   if (speedMap[sc].isFR) continue;
@@ -57,7 +60,8 @@ for (const sc of Object.keys(speedMap)) {
         family: speedMap[sc].type.split(" ")[0] + " Family",
         speedCode: sc, type: speedMap[sc].type, desc: speedMap[sc].desc,
         currentCode: cc, current: currentMap[cc].current,
-        voltageCode: vc, voltage: voltageMap[vc].voltage, voltageRms: null, isFR: false
+        voltageCode: vc, voltage: voltageMap[vc].voltage,
+        voltageRms: null, isFR: false, isDigitVoltage: voltageMap[vc].isDigit
       };
     }
   }
@@ -89,7 +93,6 @@ for (const [alias, main] of Object.entries(frCurrentAliases)) {
   }
 }
 
-/* ---------- M-Series ---------- */
 const mSeriesDatabase = {
   "M1": { family: "M-Series (SMA)", type: "M1 — Surface Mount Rectifier", current: "1.0 A", voltage: "50 V", voltageRms: "35 Vrms", equivalent: "1N4001" },
   "M2": { family: "M-Series (SMA)", type: "M2 — Surface Mount Rectifier", current: "1.0 A", voltage: "100 V", voltageRms: "70 Vrms", equivalent: "1N4002" },
@@ -100,8 +103,6 @@ const mSeriesDatabase = {
   "M7": { family: "M-Series (SMA)", type: "M7 — Surface Mount Rectifier", current: "1.0 A", voltage: "1000 V", voltageRms: "700 Vrms", equivalent: "1N4007" },
   "M":  { family: "M-Series (SMA)", type: "M — Surface Mount Rectifier", current: "1.0 A", voltage: "1000 V DC", voltageRms: null, equivalent: "1N4007" }
 };
-
-/* ---------- 400x Series ---------- */
 const series400Database = {
   "4001": { family: "400x Series (1N400x)", type: "4001 — General Purpose Rectifier", current: "1.0 A", voltage: "50 V", voltageRms: "35 Vrms", equivalent: "1N4001" },
   "4002": { family: "400x Series (1N400x)", type: "4002 — General Purpose Rectifier", current: "1.0 A", voltage: "100 V", voltageRms: "70 Vrms", equivalent: "1N4002" },
@@ -111,8 +112,6 @@ const series400Database = {
   "4006": { family: "400x Series (1N400x)", type: "4006 — General Purpose Rectifier", current: "1.0 A", voltage: "800 V", voltageRms: "560 Vrms", equivalent: "1N4006" },
   "4007": { family: "400x Series (1N400x)", type: "4007 — General Purpose Rectifier", current: "1.0 A", voltage: "1000 V", voltageRms: "700 Vrms", equivalent: "1N4007" }
 };
-
-/* ---------- 1N54 Series (3A) ---------- */
 const series1N54Database = {
   "1N5400": { family: "1N54 Series (3A)", type: "1N5400 — General Purpose Rectifier", current: "3.0 A", voltage: "50 V", equivalent: "1N5400" },
   "1N5401": { family: "1N54 Series (3A)", type: "1N5401 — General Purpose Rectifier", current: "3.0 A", voltage: "100 V", equivalent: "1N5401" },
@@ -124,10 +123,6 @@ const series1N54Database = {
   "1N5407": { family: "1N54 Series (3A)", type: "1N5407 — General Purpose Rectifier", current: "3.0 A", voltage: "800 V", equivalent: "1N5407" },
   "1N5408": { family: "1N54 Series (3A)", type: "1N5408 — General Purpose Rectifier", current: "3.0 A", voltage: "1000 V", equivalent: "1N5408" }
 };
-
-/* ============================================================
-   ZENER DIODE DATABASE (W1–Z5)
-   ============================================================ */
 const zenerDatabase = {
   "W1": { family: "Zener Diode (SOD-123)", type: "W1 — 3.3V Zener",   zenerV: "3.3 V",  equivalent: "BZT52C3V3", package: "SOD-123" },
   "W2": { family: "Zener Diode (SOD-123)", type: "W2 — 3.6V Zener",   zenerV: "3.6 V",  equivalent: "BZT52C3V6", package: "SOD-123" },
@@ -145,10 +140,6 @@ const zenerDatabase = {
   "Z4": { family: "Zener Diode (SOD-123)", type: "Z4 — 13V Zener",    zenerV: "13 V",   equivalent: "BZT52C13",  package: "SOD-123" },
   "Z5": { family: "Zener Diode (SOD-123)", type: "Z5 — 15V Zener",    zenerV: "15 V",   equivalent: "BZT52C15",  package: "SOD-123" }
 };
-
-/* ============================================================
-   SCHOTTKY DIODE CODES (SMD Markings)
-   ============================================================ */
 const schottkyDatabase = {
   "SS14": { family: "Schottky Diode (SMA)",  type: "SS14 — Schottky Barrier",     current: "1.0 A",   voltage: "40 V",  equivalent: "SS14",  package: "SMA" },
   "SS34": { family: "Schottky Diode (SMC)",  type: "SS34 — Schottky Barrier",     current: "3.0 A",   voltage: "40 V",  equivalent: "SS34",  package: "SMC" },
@@ -161,10 +152,6 @@ const schottkyDatabase = {
   "SL":   { family: "Schottky Diode (SOD-123)", type: "SL — B5819W",              current: "1.0 A",   voltage: "40 V",  equivalent: "B5819W",  package: "SOD-123" },
   "S4":   { family: "Schottky Diode (SOD-123)", type: "S4 — SD103AW",             current: "350 mA",  voltage: "40 V",  equivalent: "SD103AW", package: "SOD-123" }
 };
-
-/* ============================================================
-   SWITCHING DIODE CODES
-   ============================================================ */
 const switchingDatabase = {
   "A2":  { family: "Switching Diode (SOD-123)", type: "A2 — 1N4148W",                current: "0.3 A",   voltage: "100 V", config: "Single",              equivalent: "1N4148W",  package: "SOD-123" },
   "T4":  { family: "Switching Diode (SOD-323)", type: "T4 — 1N4148WS",               current: "0.3 A",   voltage: "100 V", config: "Single",              equivalent: "1N4148WS", package: "SOD-323" },
@@ -177,10 +164,6 @@ const switchingDatabase = {
   "T6":  { family: "Switching Diode (SOD-323)", type: "T6 — 1N4448WS",               current: "0.25 A",  voltage: "100 V", config: "Single",              equivalent: "1N4448WS", package: "SOD-323" },
   "A6":  { family: "Switching Diode (SOT-23)",  type: "A6 — BAS16",                  current: "0.25 A",  voltage: "100 V", config: "Single",              equivalent: "BAS16",    package: "SOT-23" }
 };
-
-/* ============================================================
-   TVS DIODE CODES
-   ============================================================ */
 const tvsDatabase = {
   "LE": { family: "TVS Diode (SMA)", type: "LE — 6.4V TVS",   breakdown: "6.4 V",  standoff: "5.0 V",  package: "SMA" },
   "CA": { family: "TVS Diode (SMA)", type: "CA — 13.3V TVS",  breakdown: "13.3 V", standoff: "12.0 V", package: "SMA" },
@@ -188,10 +171,6 @@ const tvsDatabase = {
   "HE": { family: "TVS Diode (SMB)", type: "HE — 6.4V TVS",   breakdown: "6.4 V",  standoff: "5.0 V",  package: "SMB" },
   "PX": { family: "TVS Diode (SMC)", type: "PX — 16.7V TVS",  breakdown: "16.7 V", standoff: "15.0 V", package: "SMC" }
 };
-
-/* ============================================================
-   PACKAGE REFERENCE TABLE
-   ============================================================ */
 const packageReference = [
   { name: "SOD-523",        dims: "1.2mm × 0.8mm",    current: "< 200 mA",         app: "Ultra-small mobile devices & wearables" },
   { name: "SOD-323",        dims: "1.7mm × 1.25mm",   current: "~ 200mA – 500mA",  app: "Signal processing / small power" },
@@ -201,7 +180,106 @@ const packageReference = [
 ];
 
 /* ============================================================
-   FR CODE PARSER
+   MOSFET DATABASE
+   Pattern: [current][channel][voltage×10][suffix?]
+   ============================================================ */
+const mosfetDatabase = {
+  // N-channel 650V (common in SMPS, inverters)
+  "7N65":   { current: "7 A",   channel: "N",  channelType: "N-Channel",  voltage: "650 V", suffix: "", package: "TO-220",  type: "7N65 — N-Channel MOSFET",  family: "MOSFET (N-Ch 650V)", desc: "High-voltage N-channel MOSFET for SMPS and inverters" },
+  "11N65":  { current: "11 A",  channel: "N",  channelType: "N-Channel",  voltage: "650 V", suffix: "", package: "TO-220",  type: "11N65 — N-Channel MOSFET", family: "MOSFET (N-Ch 650V)", desc: "11A N-channel MOSFET for switch-mode power supplies" },
+  "13N65":  { current: "13 A",  channel: "N",  channelType: "N-Channel",  voltage: "650 V", suffix: "", package: "TO-220",  type: "13N65 — N-Channel MOSFET", family: "MOSFET (N-Ch 650V)", desc: "13A N-channel MOSFET, low RDS(on)" },
+  "15N65":  { current: "15 A",  channel: "N",  channelType: "N-Channel",  voltage: "650 V", suffix: "", package: "TO-247",  type: "15N65 — N-Channel MOSFET", family: "MOSFET (N-Ch 650V)", desc: "15A high-power N-channel MOSFET" },
+  "20N65":  { current: "20 A",  channel: "N",  channelType: "N-Channel",  voltage: "650 V", suffix: "", package: "TO-247",  type: "20N65 — N-Channel MOSFET", family: "MOSFET (N-Ch 650V)", desc: "20A high-power N-channel MOSFET" },
+  // N-channel 600V
+  "4N60":   { current: "4 A",   channel: "N",  channelType: "N-Channel",  voltage: "600 V", suffix: "", package: "TO-220",  type: "4N60 — N-Channel MOSFET",  family: "MOSFET (N-Ch 600V)", desc: "4A N-channel MOSFET for SMPS" },
+  "5N60":   { current: "5 A",   channel: "N",  channelType: "N-Channel",  voltage: "600 V", suffix: "", package: "TO-220",  type: "5N60 — N-Channel MOSFET",  family: "MOSFET (N-Ch 600V)", desc: "5A N-channel MOSFET" },
+  "6N60":   { current: "6 A",   channel: "N",  channelType: "N-Channel",  voltage: "600 V", suffix: "", package: "TO-220",  type: "6N60 — N-Channel MOSFET",  family: "MOSFET (N-Ch 600V)", desc: "6A N-channel MOSFET" },
+  "8N60":   { current: "8 A",   channel: "N",  channelType: "N-Channel",  voltage: "600 V", suffix: "", package: "TO-220",  type: "8N60 — N-Channel MOSFET",  family: "MOSFET (N-Ch 600V)", desc: "8A N-channel MOSFET" },
+  "10N60":  { current: "10 A",  channel: "N",  channelType: "N-Channel",  voltage: "600 V", suffix: "", package: "TO-220",  type: "10N60 — N-Channel MOSFET", family: "MOSFET (N-Ch 600V)", desc: "10A N-channel MOSFET" },
+  "13NM60": { current: "13 A",  channel: "NM", channelType: "N-Channel (NM)", voltage: "600 V", suffix: "", package: "TO-220", type: "13NM60 — N-Channel MOSFET", family: "MOSFET (N-Ch 600V)", desc: "13A N-channel MOSFET (NM variant)" },
+  "20NM60": { current: "20 A",  channel: "NM", channelType: "N-Channel (NM)", voltage: "600 V", suffix: "", package: "TO-247", type: "20NM60 — N-Channel MOSFET", family: "MOSFET (N-Ch 600V)", desc: "20A N-channel MOSFET (NM variant)" },
+  // N-channel 500V
+  "10N50":  { current: "10 A",  channel: "N",  channelType: "N-Channel",  voltage: "500 V", suffix: "", package: "TO-220",  type: "10N50 — N-Channel MOSFET", family: "MOSFET (N-Ch 500V)", desc: "10A N-channel MOSFET" },
+  // N-channel 200V
+  "20N20":  { current: "20 A",  channel: "N",  channelType: "N-Channel",  voltage: "200 V", suffix: "", package: "TO-220",  type: "20N20 — N-Channel MOSFET", family: "MOSFET (N-Ch 200V)", desc: "20A N-channel MOSFET for motor drivers" },
+  // N-channel low voltage (logic-level)
+  "75N75":  { current: "75 A",  channel: "N",  channelType: "N-Channel",  voltage: "75 V",  suffix: "", package: "TO-220",  type: "75N75 — N-Channel MOSFET", family: "MOSFET (N-Ch 75V)",  desc: "75A high-current N-channel MOSFET" },
+  "80N06":  { current: "80 A",  channel: "N",  channelType: "N-Channel",  voltage: "60 V",  suffix: "", package: "TO-220",  type: "80N06 — N-Channel MOSFET", family: "MOSFET (N-Ch 60V)",  desc: "80A low-voltage high-current MOSFET" },
+  "30N06":  { current: "30 A",  channel: "N",  channelType: "N-Channel",  voltage: "60 V",  suffix: "", package: "TO-220",  type: "30N06 — N-Channel MOSFET", family: "MOSFET (N-Ch 60V)",  desc: "30A low-voltage N-channel MOSFET" },
+  // P-channel
+  "10P06":  { current: "10 A",  channel: "P",  channelType: "P-Channel",  voltage: "60 V",  suffix: "", package: "TO-220",  type: "10P06 — P-Channel MOSFET", family: "MOSFET (P-Ch 60V)",  desc: "10A P-channel MOSFET for high-side switching" },
+  "15P06":  { current: "15 A",  channel: "P",  channelType: "P-Channel",  voltage: "60 V",  suffix: "", package: "TO-220",  type: "15P06 — P-Channel MOSFET", family: "MOSFET (P-Ch 60V)",  desc: "15A P-channel MOSFET" },
+  "5P10":   { current: "5 A",   channel: "P",  channelType: "P-Channel",  voltage: "100 V", suffix: "", package: "TO-220",  type: "5P10 — P-Channel MOSFET",  family: "MOSFET (P-Ch 100V)", desc: "5A P-channel MOSFET" },
+  "10P10":  { current: "10 A",  channel: "P",  channelType: "P-Channel",  voltage: "100 V", suffix: "", package: "TO-220",  type: "10P10 — P-Channel MOSFET", family: "MOSFET (P-Ch 100V)", desc: "10A P-channel MOSFET" },
+  // Common IRF series
+  "IRF3205":   { current: "110 A", channel: "N", channelType: "N-Channel", voltage: "55 V",  suffix: "", package: "TO-220", type: "IRF3205 — N-Channel MOSFET", family: "MOSFET (IRF)", desc: "110A 55V N-channel, very low RDS(on)" },
+  "IRFZ44N":   { current: "49 A",  channel: "N", channelType: "N-Channel", voltage: "55 V",  suffix: "N", package: "TO-220", type: "IRFZ44N — N-Channel MOSFET", family: "MOSFET (IRF)", desc: "49A 55V N-channel MOSFET" },
+  "IRF540N":   { current: "33 A",  channel: "N", channelType: "N-Channel", voltage: "100 V", suffix: "N", package: "TO-220", type: "IRF540N — N-Channel MOSFET", family: "MOSFET (IRF)", desc: "33A 100V N-channel MOSFET" },
+  "IRF9540":   { current: "23 A",  channel: "N", channelType: "N-Channel", voltage: "100 V", suffix: "",  package: "TO-220", type: "IRF9540 — N-Channel MOSFET", family: "MOSFET (IRF)", desc: "23A 100V N-channel MOSFET" },
+  "IRF740":    { current: "10 A",  channel: "N", channelType: "N-Channel", voltage: "400 V", suffix: "",  package: "TO-220", type: "IRF740 — N-Channel MOSFET",  family: "MOSFET (IRF)", desc: "10A 400V N-channel MOSFET" },
+  "IRFP460":   { current: "20 A",  channel: "N", channelType: "N-Channel", voltage: "500 V", suffix: "",  package: "TO-247", type: "IRFP460 — N-Channel MOSFET", family: "MOSFET (IRF)", desc: "20A 500V high-power N-channel" },
+  "IRF9Z24":   { current: "30 A",  channel: "P", channelType: "P-Channel", voltage: "24 V",  suffix: "",  package: "TO-220", type: "IRF9Z24 — P-Channel MOSFET", family: "MOSFET (IRF)", desc: "30A 24V P-channel MOSFET" },
+  // SMD MOSFETs
+  "SI2302":  { current: "2.8 A", channel: "N", channelType: "N-Channel", voltage: "20 V",  suffix: "", package: "SOT-23", type: "SI2302 — N-Channel SMD MOSFET", family: "MOSFET (SMD)", desc: "2.8A 20V N-channel SMD MOSFET" },
+  "AO3400":  { current: "5.7 A", channel: "N", channelType: "N-Channel", voltage: "30 V",  suffix: "", package: "SOT-23", type: "AO3400 — N-Channel SMD MOSFET", family: "MOSFET (SMD)", desc: "5.7A 30V N-channel SMD MOSFET" },
+  "AO3401":  { current: "4 A",   channel: "P", channelType: "P-Channel", voltage: "30 V",  suffix: "", package: "SOT-23", type: "AO3401 — P-Channel SMD MOSFET", family: "MOSFET (SMD)", desc: "4A 30V P-channel SMD MOSFET" },
+  "IRLML6244": { current: "6 A", channel: "N", channelType: "N-Channel", voltage: "20 V",  suffix: "", package: "SOT-23", type: "IRLML6244 — N-Channel SMD MOSFET", family: "MOSFET (SMD)", desc: "6A 20V logic-level N-channel SMD" }
+};
+
+/* ============================================================
+   MOSFET PARSER
+   Pattern: [current_digits][channel: N|NM|P|R][voltage_digits][suffix?]
+   ============================================================ */
+function parseMosfetCode(code) {
+  code = code.toUpperCase().trim();
+  if (!code) return null;
+
+  // Handle IRF-style prefixes (IRF, IRL, IRFP, etc.)
+  let workCode = code;
+  let irfPrefix = "";
+  const irfMatch = code.match(/^(IRF[PRL]?)(.+)$/i);
+  if (irfMatch) {
+    irfPrefix = irfMatch[1];
+    workCode = irfMatch[2];
+  }
+
+  // Pattern: digits + (NM|N|P|R) + digits + optional letter
+  const pattern = /^(\d+)(NM|N|P|R)(\d+)([A-Z]?)$/;
+  const match = workCode.match(pattern);
+  if (!match) return null;
+
+  const currentAmps = match[1];
+  const channel = match[2];
+  const voltageCode = match[3];
+  const suffix = match[4] || "";
+
+  // Voltage = code × 10 (e.g., 65 → 650V, 06 → 60V)
+  const voltageV = parseInt(voltageCode, 10) * 10;
+
+  let channelType = "";
+  if (channel === "N") channelType = "N-Channel";
+  else if (channel === "NM") channelType = "N-Channel (NM)";
+  else if (channel === "P") channelType = "P-Channel";
+  else if (channel === "R") channelType = "N-Channel (Logic-level)";
+
+  const fullCode = irfPrefix ? irfPrefix.toUpperCase() + workCode : code;
+
+  return {
+    code: fullCode,
+    current: currentAmps + " A",
+    channel: channel,
+    channelType: channelType,
+    voltageCode: voltageCode,
+    voltage: voltageV + " V",
+    suffix: suffix,
+    hasSuffix: suffix.length > 0,
+    isIRF: irfPrefix.length > 0,
+    irfPrefix: irfPrefix.toUpperCase()
+  };
+}
+
+/* ============================================================
+   FR PARSER (unchanged)
    ============================================================ */
 function parseFRCode(code) {
   code = code.toUpperCase();
@@ -229,13 +307,15 @@ function parseFRCode(code) {
 /* ============================================================
    UNIFIED LOOKUP
    ============================================================ */
-function findDiode(code) {
-  code = (code || "").toUpperCase();
-  // Package reference lookup
-  if (packageReference.some(p => p.name.toUpperCase().replace(/[^A-Z0-9]/g,"") === code.replace(/[^A-Z0-9]/g,""))) {
-    const pkg = packageReference.find(p => p.name.toUpperCase().replace(/[^A-Z0-9]/g,"") === code.replace(/[^A-Z0-9]/g,""));
-    if (pkg) return { source: "package", data: pkg };
-  }
+function findComponent(code) {
+  code = (code || "").toUpperCase().trim();
+
+  // Package reference
+  const pkgNorm = code.replace(/[^A-Z0-9]/g,"");
+  const pkg = packageReference.find(p => p.name.toUpperCase().replace(/[^A-Z0-9]/g,"") === pkgNorm);
+  if (pkg) return { source: "package", data: pkg };
+
+  // Diode databases (exact match first)
   if (diodeDatabase[code]) return { source: "builder", data: diodeDatabase[code] };
   if (mSeriesDatabase[code]) return { source: "m-series", data: mSeriesDatabase[code] };
   if (series400Database[code]) return { source: "400x", data: series400Database[code] };
@@ -244,6 +324,32 @@ function findDiode(code) {
   if (schottkyDatabase[code]) return { source: "schottky", data: schottkyDatabase[code] };
   if (switchingDatabase[code]) return { source: "switching", data: switchingDatabase[code] };
   if (tvsDatabase[code]) return { source: "tvs", data: tvsDatabase[code] };
+
+  // MOSFET: exact match first
+  if (mosfetDatabase[code]) return { source: "mosfet", data: mosfetDatabase[code], parsed: null };
+
+  // MOSFET: try parsing
+  const mosfetParsed = parseMosfetCode(code);
+  if (mosfetParsed) {
+    // Build a synthetic data object from parsed values
+    const data = {
+      family: `MOSFET (${mosfetParsed.channelType})`,
+      type: `${mosfetParsed.code} — ${mosfetParsed.channelType} MOSFET`,
+      current: mosfetParsed.current,
+      channel: mosfetParsed.channel,
+      channelType: mosfetParsed.channelType,
+      voltage: mosfetParsed.voltage,
+      voltageCode: mosfetParsed.voltageCode,
+      suffix: mosfetParsed.suffix,
+      hasSuffix: mosfetParsed.hasSuffix,
+      isIRF: mosfetParsed.isIRF,
+      irfPrefix: mosfetParsed.irfPrefix,
+      package: "TO-220 (typical)",
+      desc: `${mosfetParsed.current} ${mosfetParsed.channelType} MOSFET, Vds = ${mosfetParsed.voltage}`
+    };
+    return { source: "mosfet", data: data, parsed: mosfetParsed };
+  }
+
   return null;
 }
 
@@ -299,7 +405,11 @@ function renderFRCurrentGrid() {
 }
 function renderStandardVoltageGrid() {
   voltageGrid.innerHTML = "";
-  voltageSub.textContent = "Choose the reverse voltage code (last character(s)). Codes I and L are reserved.";
+  voltageSub.innerHTML = `Two encoding systems: <strong>Letters (A–M, T4)</strong> = fixed voltages · <strong>Digits (0–9)</strong> = digit × 10 V.`;
+  const letterHeader = document.createElement("div");
+  letterHeader.style.cssText = "grid-column: 1 / -1; font-size: 0.75rem; color: var(--text-2); text-transform: uppercase; letter-spacing: 1.5px; padding: 4px 2px 0;";
+  letterHeader.textContent = "🔤 Letter Codes";
+  voltageGrid.appendChild(letterHeader);
   for (const code of ["A","B","C","D","E","F","G","H","I","J","K","L","M","T4"]) {
     const info = voltageMap[code];
     const btn = document.createElement("button");
@@ -307,6 +417,18 @@ function renderStandardVoltageGrid() {
     btn.innerHTML = `<div class="opt-code">${code}</div><div class="opt-label">Voltage Code</div><div class="opt-value">${info.used ? info.voltage : "⊘ Not used"}</div>`;
     if (info.used) btn.addEventListener("click", () => selectVoltage(code));
     else { btn.addEventListener("click", () => showToast(`${code} is not used`)); btn.title = "Reserved / not used"; }
+    voltageGrid.appendChild(btn);
+  }
+  const digitHeader = document.createElement("div");
+  digitHeader.style.cssText = "grid-column: 1 / -1; font-size: 0.75rem; color: var(--text-2); text-transform: uppercase; letter-spacing: 1.5px; padding: 12px 2px 0; border-top: 1px dashed var(--border); margin-top: 4px;";
+  digitHeader.innerHTML = "🔢 Digit Codes <span style='color:var(--accent); font-weight:600; text-transform:none; letter-spacing:0;'>· digit × 10 V</span>";
+  voltageGrid.appendChild(digitHeader);
+  for (const code of ["0","1","2","3","4","5","6","7","8","9"]) {
+    const info = voltageMap[code];
+    const btn = document.createElement("button");
+    btn.className = "option"; btn.dataset.value = code;
+    btn.innerHTML = `<div class="opt-code">${code}</div><div class="opt-label">Voltage Code</div><div class="opt-value">${info.voltage}</div>`;
+    btn.addEventListener("click", () => selectVoltage(code));
     voltageGrid.appendChild(btn);
   }
 }
@@ -352,8 +474,10 @@ function selectCurrent(code) {
 function selectVoltage(code) {
   state.voltage = code;
   [...voltageGrid.children].forEach(c => c.classList.toggle("selected", c.dataset.value === code));
-  const info = state.mode === "fr" ? frVoltageMap[code] : voltageMap[code];
-  voltageSummary.innerHTML = `<strong>Voltage Code:</strong> ${code} &nbsp;·&nbsp; <strong>Reverse Voltage:</strong> ${info.voltage}`;
+  const info = voltageMap[code];
+  let summaryHtml = `<strong>Voltage Code:</strong> ${code} &nbsp;·&nbsp; <strong>Reverse Voltage:</strong> ${info.voltage}`;
+  if (info.isDigit) summaryHtml += ` <span style="color:var(--text-1); font-size:0.8rem;">(${code} + "0" = ${info.voltage})</span>`;
+  voltageSummary.innerHTML = summaryHtml;
   voltageSummary.classList.add("show");
   panel3.classList.add("completed");
   updateCodeDisplay(); updateResult();
@@ -382,10 +506,91 @@ function buildCode() {
 }
 
 /* ============================================================
-   FR BREAKDOWN
+   MOSFET PINOUT SVG
+   ============================================================ */
+function renderMosfetPinout(data) {
+  const isN = data.channel === "N" || data.channel === "NM" || data.channel === "R";
+  const channelColor = isN ? "var(--accent-2)" : "var(--tvs)";
+  const channelLabel = isN ? "N-CHANNEL" : "P-CHANNEL";
+
+  return `
+    <div class="mosfet-pinout">
+      <div class="mosfet-pinout-title">🔌 MOSFET Pinout &amp; Connections</div>
+      <svg class="mosfet-pinout-svg" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+        <!-- MOSFET Symbol -->
+        <g transform="translate(150, 40)">
+          <!-- Gate line -->
+          <line x1="0" y1="60" x2="30" y2="60" stroke="${channelColor}" stroke-width="2.5"/>
+          <!-- Gate plate -->
+          <line x1="30" y1="30" x2="30" y2="90" stroke="${channelColor}" stroke-width="2.5"/>
+          <!-- Channel body -->
+          <line x1="40" y1="30" x2="40" y2="45" stroke="var(--text-0)" stroke-width="2.5"/>
+          <line x1="40" y1="55" x2="40" y2="65" stroke="var(--text-0)" stroke-width="2.5"/>
+          <line x1="40" y1="75" x2="40" y2="90" stroke="var(--text-0)" stroke-width="2.5"/>
+          <!-- Drain -->
+          <line x1="40" y1="37" x2="70" y2="37" stroke="var(--text-0)" stroke-width="2.5"/>
+          <line x1="70" y1="37" x2="70" y2="0" stroke="var(--text-0)" stroke-width="2.5"/>
+          <!-- Source -->
+          <line x1="40" y1="82" x2="70" y2="82" stroke="var(--text-0)" stroke-width="2.5"/>
+          <line x1="70" y1="82" x2="70" y2="120" stroke="var(--text-0)" stroke-width="2.5"/>
+          <!-- Arrow (N-channel points in, P-channel points out) -->
+          ${isN
+            ? `<polygon points="40,60 50,55 50,65" fill="${channelColor}"/>`
+            : `<polygon points="50,60 40,55 40,65" fill="${channelColor}"/>`
+          }
+        </g>
+
+        <!-- Pin Labels -->
+        <g font-family="ui-monospace, monospace" font-weight="700" font-size="14">
+          <!-- Gate -->
+          <text x="120" y="105" fill="${channelColor}" text-anchor="end">G</text>
+          <text x="120" y="120" fill="var(--text-2)" font-size="9" font-weight="500" text-anchor="end">GATE</text>
+
+          <!-- Drain -->
+          <text x="220" y="30" fill="var(--warning)" text-anchor="start">D</text>
+          <text x="220" y="45" fill="var(--text-2)" font-size="9" font-weight="500" text-anchor="start">DRAIN</text>
+
+          <!-- Source -->
+          <text x="220" y="165" fill="var(--accent)" text-anchor="start">S</text>
+          <text x="220" y="180" fill="var(--text-2)" font-size="9" font-weight="500" text-anchor="start">SOURCE</text>
+        </g>
+
+        <!-- Channel Type Label -->
+        <text x="200" y="20" fill="${channelColor}" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" font-weight="700" letter-spacing="2">${channelLabel}</text>
+      </svg>
+
+      <div class="pinout-legend">
+        <div class="pinout-legend-item">
+          <div class="pinout-legend-dot" style="background: var(--accent);"></div>
+          <div class="pinout-legend-text">
+            <strong>Source (S)</strong>
+            Connected to the positive supply
+          </div>
+        </div>
+        <div class="pinout-legend-item">
+          <div class="pinout-legend-dot" style="background: var(--warning);"></div>
+          <div class="pinout-legend-text">
+            <strong>Drain (D)</strong>
+            Connected to your load → ground
+          </div>
+        </div>
+        <div class="pinout-legend-item">
+          <div class="pinout-legend-dot" style="background: ${channelColor};"></div>
+          <div class="pinout-legend-text">
+            <strong>Gate (G)</strong>
+            Control signal via pull-up resistor
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+/* ============================================================
+   BREAKDOWN RENDERERS
    ============================================================ */
 function renderFRBreakdown(code, data) {
-  const container = $("frBreakdownContainer");
+  const container = $("breakdownContainer");
   if (!data.isFR) { container.innerHTML = ""; return; }
   const parsed = parseFRCode(code);
   if (!parsed) { container.innerHTML = ""; return; }
@@ -413,17 +618,101 @@ function renderFRBreakdown(code, data) {
   `;
 }
 
+function renderMosfetBreakdown(code, data) {
+  const container = $("breakdownContainer");
+  // Extract segments from code
+  const parsed = parseMosfetCode(code);
+  if (!parsed) { container.innerHTML = ""; return; }
+
+  const fourCol = parsed.hasSuffix ? "four-col" : "";
+  let suffixHtml = "";
+  if (parsed.hasSuffix) {
+    suffixHtml = `
+      <div class="mosfet-segment suffix-seg">
+        <div class="mosfet-seg-code">${parsed.suffix}</div>
+        <div class="mosfet-seg-label">Suffix</div>
+        <div class="mosfet-seg-value">Package / Rev</div>
+      </div>
+    `;
+  }
+
+  const currentDisplay = parsed.isIRF ? parsed.code.replace(parsed.irfPrefix, "").match(/^\d+/)[0] : parsed.current.replace(" A", "");
+  const voltageDisplay = parsed.voltageCode;
+
+  container.innerHTML = `
+    <div class="mosfet-breakdown">
+      <div class="mosfet-breakdown-title">📖 MOSFET Code Breakdown</div>
+      <div class="mosfet-breakdown-row ${fourCol}">
+        <div class="mosfet-segment current-seg">
+          <div class="mosfet-seg-code">${parsed.current.replace(" A", "")}</div>
+          <div class="mosfet-seg-label">Current (A)</div>
+          <div class="mosfet-seg-value">${parsed.current}</div>
+        </div>
+        <div class="mosfet-segment channel-seg">
+          <div class="mosfet-seg-code">${parsed.channel}</div>
+          <div class="mosfet-seg-label">Channel</div>
+          <div class="mosfet-seg-value">${parsed.channelType}</div>
+        </div>
+        <div class="mosfet-segment voltage-seg">
+          <div class="mosfet-seg-code">${parsed.voltageCode}</div>
+          <div class="mosfet-seg-label">Voltage (×10)</div>
+          <div class="mosfet-seg-value">${parsed.voltageCode} × 10 = ${parsed.voltage}</div>
+        </div>
+        ${suffixHtml}
+      </div>
+    </div>
+  `;
+}
+
 /* ============================================================
    RESULT CARD RENDERER
    ============================================================ */
-function renderResult(code, source, data) {
+function renderResult(code, source, data, parsed) {
   $("resultCode").textContent = code;
-  $("resultType").textContent = data.type;
+  $("resultType").textContent = data.type || data.name;
   const familyEl = $("resultFamily");
   if (data.family) { familyEl.textContent = data.family; familyEl.style.display = "inline-block"; }
   else familyEl.style.display = "none";
 
-  renderFRBreakdown(code, data);
+  // Symbol container
+  const symbolContainer = $("symbolContainer");
+  const breakdownContainer = $("breakdownContainer");
+  const pinoutContainer = $("pinoutContainer");
+
+  if (source === "mosfet") {
+    symbolContainer.innerHTML = `
+      <svg viewBox="0 0 140 80" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--mosfet); width: 140px;">
+        <line x1="10" y1="40" x2="35" y2="40"/>
+        <line x1="35" y1="20" x2="35" y2="60" stroke-width="2.5"/>
+        <line x1="45" y1="20" x2="45" y2="30"/>
+        <line x1="45" y1="35" x2="45" y2="45"/>
+        <line x1="45" y1="50" x2="45" y2="60"/>
+        <line x1="45" y1="25" x2="70" y2="25"/>
+        <line x1="70" y1="25" x2="70" y2="10"/>
+        <line x1="45" y1="55" x2="70" y2="55"/>
+        <line x1="70" y1="55" x2="70" y2="70"/>
+        <polygon points="45,40 55,35 55,45" fill="var(--mosfet)"/>
+        <text x="85" y="15" fill="var(--warning)" font-size="10" font-weight="700" font-family="monospace">D</text>
+        <text x="85" y="75" fill="var(--accent)" font-size="10" font-weight="700" font-family="monospace">S</text>
+        <text x="5" y="55" fill="var(--accent-2)" font-size="10" font-weight="700" font-family="monospace">G</text>
+      </svg>
+    `;
+    renderMosfetBreakdown(code, data);
+    pinoutContainer.innerHTML = renderMosfetPinout(data);
+  } else {
+    symbolContainer.innerHTML = `
+      <svg viewBox="0 0 140 60" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent)">
+        <line x1="5" y1="30" x2="40" y2="30"/>
+        <polygon points="40,12 75,30 40,48" fill="currentColor" opacity="0.25"/>
+        <polygon points="40,12 75,30 40,48"/>
+        <line x1="75" y1="12" x2="75" y2="48"/>
+        <line x1="82" y1="12" x2="82" y2="48"/>
+        <line x1="82" y1="30" x2="135" y2="30"/>
+      </svg>
+    `;
+    renderFRBreakdown(code, data);
+    pinoutContainer.innerHTML = "";
+  }
 
   const grid = $("resultGrid");
   grid.innerHTML = "";
@@ -431,10 +720,33 @@ function renderResult(code, source, data) {
   if (source === "builder") {
     const speedLabel = data.isFR ? "⚡ Family" : "⚡ Speed / Type";
     const speedValue = data.isFR ? "FR · Fast Recovery" : `${data.speedCode} · ${data.type.split(" ")[0]}`;
+    let voltageBadgeHtml = `<div class="b-label">⚡ Reverse Voltage</div><div class="b-value">${data.voltage}</div>`;
+    if (data.isDigitVoltage) {
+      voltageBadgeHtml += `<div class="b-sub" style="font-size:0.7rem; color:var(--text-1); margin-top:6px;">Code "${data.voltageCode}" → ${data.voltageCode}0 = ${data.voltage}</div>`;
+    }
     grid.innerHTML = `
       <div class="badge speed"><div class="b-label">${speedLabel}</div><div class="b-value">${speedValue}</div></div>
       <div class="badge current"><div class="b-label">🔌 Current</div><div class="b-value">${data.current}</div></div>
-      <div class="badge voltage"><div class="b-label">⚡ Reverse Voltage</div><div class="b-value">${data.voltage}</div></div>
+      <div class="badge voltage">${voltageBadgeHtml}</div>
+      <div class="badge code"><div class="b-label">📋 Part Code</div><div class="b-value">${code}</div></div>
+    `;
+  } else if (source === "mosfet") {
+    const channelBadgeClass = (data.channel === "P") ? "channel-p" : "channel-n";
+    let suffixHtml = "";
+    if (data.hasSuffix) {
+      suffixHtml = `<div class="badge mosfet"><div class="b-label">🔖 Suffix</div><div class="b-value">${data.suffix || "—"}</div></div>`;
+    }
+    let irfHtml = "";
+    if (data.isIRF) {
+      irfHtml = `<div class="badge speed"><div class="b-label">🏷️ Series</div><div class="b-value">${data.irfPrefix}</div></div>`;
+    }
+    grid.innerHTML = `
+      <div class="badge current"><div class="b-label">🔌 Drain Current (Id)</div><div class="b-value">${data.current}</div></div>
+      <div class="badge ${channelBadgeClass}"><div class="b-label">⚡ Channel Type</div><div class="b-value">${data.channelType}</div></div>
+      <div class="badge voltage"><div class="b-label">⚡ Vds Breakdown</div><div class="b-value">${data.voltage}</div></div>
+      ${suffixHtml}
+      ${irfHtml}
+      <div class="badge speed"><div class="b-label">📦 Package</div><div class="b-value">${data.package || "—"}</div></div>
       <div class="badge code"><div class="b-label">📋 Part Code</div><div class="b-value">${code}</div></div>
     `;
   } else if (source === "zener") {
@@ -490,9 +802,9 @@ function renderResult(code, source, data) {
 function updateResult() {
   const code = buildCode();
   if (!code) { resultCard.classList.remove("show"); return; }
-  const found = findDiode(code);
+  const found = findComponent(code);
   if (!found) { resultCard.classList.remove("show"); return; }
-  renderResult(code, found.source, found.data);
+  renderResult(code, found.source, found.data, found.parsed);
 }
 
 /* ============================================================
@@ -501,11 +813,11 @@ function updateResult() {
 function lookupCode(code) {
   code = (code || "").trim().toUpperCase();
   if (!code || code.length < 1) {
-    searchResult.innerHTML = `<span style="color: var(--danger)">⚠️ Enter a valid diode code.</span>`;
+    searchResult.innerHTML = `<span style="color: var(--danger)">⚠️ Enter a valid component code.</span>`;
     searchResult.classList.add("show"); return;
   }
 
-  const found = findDiode(code);
+  const found = findComponent(code);
   if (!found) {
     searchResult.innerHTML = `<span style="color: var(--danger)">❌ Code <strong>${code}</strong> not found in database.</span>`;
     searchResult.classList.add("show"); resultCard.classList.remove("show"); return;
@@ -514,6 +826,7 @@ function lookupCode(code) {
   const d = found.data;
   let summary = `✅ <strong>${code}</strong> → ${d.type || d.name}`;
   if (d.current) summary += ` · Current: <strong>${d.current}</strong>`;
+  if (d.channelType) summary += ` · <strong>${d.channelType}</strong>`;
   if (d.voltage) summary += ` · Voltage: <strong>${d.voltage}</strong>`;
   if (d.zenerV) summary += ` · Vz: <strong>${d.zenerV}</strong>`;
   if (d.breakdown) summary += ` · Breakdown: <strong>${d.breakdown}</strong>`;
@@ -522,6 +835,7 @@ function lookupCode(code) {
   if (d.equivalent) summary += ` · Part: <strong>${d.equivalent}</strong>`;
   if (d.config) summary += ` · Config: <strong>${d.config}</strong>`;
   if (d.package) summary += ` · Pkg: <strong>${d.package}</strong>`;
+  if (d.isDigitVoltage) summary += ` <span style="color:var(--text-1); font-size:0.8rem;">(${d.voltageCode} → ${d.voltageCode}0)</span>`;
   searchResult.innerHTML = summary;
   searchResult.classList.add("show");
 
@@ -538,8 +852,10 @@ function lookupCode(code) {
     const curInfo = state.mode === "fr" ? frCurrentMap[d.currentCode] : currentMap[d.currentCode];
     currentSummary.innerHTML = `<strong>Current:</strong> ${curInfo.current} &nbsp;·&nbsp; <strong>Code:</strong> ${d.currentCode}`;
     currentSummary.classList.add("show");
-    const vltInfo = state.mode === "fr" ? frVoltageMap[d.voltageCode] : voltageMap[d.voltageCode];
-    voltageSummary.innerHTML = `<strong>Voltage Code:</strong> ${d.voltageCode} &nbsp;·&nbsp; <strong>Reverse Voltage:</strong> ${vltInfo.voltage}`;
+    const vltInfo = voltageMap[d.voltageCode];
+    let vSummary = `<strong>Voltage Code:</strong> ${d.voltageCode} &nbsp;·&nbsp; <strong>Reverse Voltage:</strong> ${vltInfo.voltage}`;
+    if (vltInfo.isDigit) vSummary += ` <span style="color:var(--text-1); font-size:0.8rem;">(${d.voltageCode} + "0" = ${vltInfo.voltage})</span>`;
+    voltageSummary.innerHTML = vSummary;
     voltageSummary.classList.add("show");
     panel1.classList.add("completed");
     panel2.classList.add("active", "completed");
@@ -555,7 +871,7 @@ function lookupCode(code) {
     updateCodeDisplay();
   }
 
-  renderResult(code, found.source, d);
+  renderResult(code, found.source, d, found.parsed);
   setTimeout(() => resultCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
 }
 
@@ -567,22 +883,16 @@ document.querySelectorAll(".hint-chip").forEach(chip => {
 });
 
 /* ============================================================
-   PACKAGE TABLE RENDER
+   PACKAGE TABLE
    ============================================================ */
 function renderPackageTable() {
   const tbody = document.querySelector("#pkgTable tbody");
   tbody.innerHTML = "";
   packageReference.forEach(p => {
     const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${p.name}</td>
-      <td>${p.dims}</td>
-      <td>${p.current}</td>
-      <td>${p.app}</td>
-    `;
+    tr.innerHTML = `<td>${p.name}</td><td>${p.dims}</td><td>${p.current}</td><td>${p.app}</td>`;
     tr.style.cursor = "pointer";
     tr.addEventListener("click", () => {
-      // Extract package code (e.g., "SMA" from "SMA (DO-214AC)")
       const code = p.name.split(" ")[0];
       searchInput.value = code;
       lookupCode(code);
@@ -608,7 +918,9 @@ $("resetBtn").addEventListener("click", () => {
   [speedSummary, currentSummary, voltageSummary, searchResult].forEach(s => s.classList.remove("show"));
   [panel1, panel2, panel3].forEach(p => p.classList.remove("completed"));
   panel2.classList.remove("active"); panel3.classList.remove("active");
-  resultCard.classList.remove("show"); $("frBreakdownContainer").innerHTML = "";
+  resultCard.classList.remove("show");
+  $("breakdownContainer").innerHTML = "";
+  $("pinoutContainer").innerHTML = "";
   searchInput.value = ""; updateCodeDisplay(); showToast("Reset complete");
 });
 
@@ -660,59 +972,6 @@ const moonIcon = `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>`;
 function applyTheme(t) { document.documentElement.setAttribute("data-theme", t); themeIcon.innerHTML = t === "light" ? sunIcon : moonIcon; document.querySelector('meta[name="theme-color"]').setAttribute("content", t === "light" ? "#f4f6fb" : "#0a0e1a"); }
 themeToggle.addEventListener("click", () => { const c = document.documentElement.getAttribute("data-theme") || "dark"; const n = c === "dark" ? "light" : "dark"; applyTheme(n); try { localStorage.setItem("smd_theme", n); } catch {} });
 try { const s = localStorage.getItem("smd_theme"); applyTheme(s || "dark"); } catch { applyTheme("dark"); }
-
-/* ============================================================
-   HIDE / SHOW BUILDER & PACKAGE REFERENCE TOGGLE
-   ============================================================ */
-(function() {
-  const toggleBtn  = $("togglePanelsBtn");
-  const toggleWrap = $("togglePanelsWrap");
-  const collapsible = $("panelsCollapsible");
-  const label      = $("togglePanelsLabel");
-  let expanded = true;
-
-  function syncToggleVisibility() {
-    // Show the button only when the result card is visible
-    toggleWrap.style.display = resultCard.classList.contains("show") ? "flex" : "none";
-  }
-
-  toggleBtn.addEventListener("click", () => {
-    expanded = !expanded;
-    if (expanded) {
-      collapsible.classList.remove("hidden");
-      toggleBtn.classList.remove("collapsed");
-      toggleBtn.setAttribute("aria-expanded", "true");
-      label.textContent = "Hide Builder & Package Reference";
-    } else {
-      collapsible.classList.add("hidden");
-      toggleBtn.classList.add("collapsed");
-      toggleBtn.setAttribute("aria-expanded", "false");
-      label.textContent = "Show Builder & Package Reference";
-    }
-  });
-
-  // Patch renderResult to keep the toggle button in sync
-  const _origRenderResult = renderResult;
-  window.renderResult = function(code, source, data) {
-    _origRenderResult(code, source, data);
-    // When a result is shown, make sure the collapsible is revealed
-    // (user may have hidden it before; we reveal it so they can still build)
-    syncToggleVisibility();
-  };
-
-  // Also patch the remove-show path
-  const _origUpdateResult = updateResult;
-  window.updateResult = function() {
-    _origUpdateResult();
-    syncToggleVisibility();
-  };
-
-  // Sync on reset
-  const resetBtn = $("resetBtn");
-  resetBtn.addEventListener("click", () => {
-    setTimeout(syncToggleVisibility, 50);
-  }, true);
-})();
 
 /* ============================================================
    INIT

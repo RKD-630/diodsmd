@@ -3,7 +3,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
 <meta name="theme-color" content="#0a0e1a">
-<title>SMD Diode Code Explorer — Multi-Family Finder</title>
+<title>SMD Diode &amp; MOSFET Code Explorer</title>
 
 <link rel="stylesheet" href="style.css"></head>
 <body>
@@ -19,8 +19,8 @@
         </svg>
       </div>
       <div>
-        <h1>SMD Diode Code Explorer</h1>
-        <p>Multi-Family Finder · Rectifier · Zener · Schottky · Switching · TVS</p>
+        <h1>SMD Diode &amp; MOSFET Code Explorer</h1>
+        <p>Multi-Family Finder · Rectifier · Zener · Schottky · Switching · TVS · MOSFET</p>
       </div>
     </div>
     <button class="icon-btn" id="themeToggle" title="Toggle theme" aria-label="Toggle theme">
@@ -57,26 +57,27 @@
   <section class="card">
     <h2 class="card-title">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-      Search Any Diode Code
+      Search Any Diode or MOSFET Code
     </h2>
-    <p class="card-sub">Try: <strong>SS2A</strong>, <strong>FR201</strong>, <strong>1N5408</strong>, <strong>W1</strong>, <strong>KL3</strong>, <strong>A7</strong>, <strong>LE</strong>, <strong>SMA</strong></p>
+    <p class="card-sub">Try: <strong>SS24</strong>, <strong>FR201</strong>, <strong>W1</strong>, <strong>A7</strong>, <strong>LE</strong>, <strong>7N65</strong>, <strong>11N65</strong>, <strong>13NM60</strong></p>
     <div class="search-wrap">
-      <input type="text" class="search-input" id="searchInput" placeholder="e.g. W1, KL3, LE, SMA, SS14" maxlength="10" autocomplete="off">
+      <input type="text" class="search-input" id="searchInput" placeholder="e.g. 7N65, SS24, W1, LE" maxlength="12" autocomplete="off">
       <button class="btn btn-primary" id="searchBtn">Lookup</button>
     </div>
     <div class="search-hints">
-      <span class="hint-chip" data-code="SS2A">SS2A</span>
+      <span class="hint-chip" data-code="SS24">SS24</span>
       <span class="hint-chip" data-code="FR101">FR101</span>
       <span class="hint-chip" data-code="1N5408">1N5408</span>
       <span class="hint-chip" data-code="W1">W1</span>
-      <span class="hint-chip" data-code="Z5">Z5</span>
       <span class="hint-chip" data-code="SS14">SS14</span>
       <span class="hint-chip" data-code="KL3">KL3</span>
-      <span class="hint-chip" data-code="A2">A2</span>
       <span class="hint-chip" data-code="A7">A7</span>
       <span class="hint-chip" data-code="LE">LE</span>
-      <span class="hint-chip" data-code="PX">PX</span>
-      <span class="hint-chip" data-code="SMA">SMA</span>
+      <span class="hint-chip mosfet" data-code="7N65">7N65</span>
+      <span class="hint-chip mosfet" data-code="11N65">11N65</span>
+      <span class="hint-chip mosfet" data-code="13NM60">13NM60</span>
+      <span class="hint-chip mosfet" data-code="10P06">10P06</span>
+      <span class="hint-chip mosfet" data-code="IRF3205">IRF3205</span>
       <span class="hint-chip" data-code="T4">T4</span>
     </div>
     <div class="summary" id="searchResult"></div>
@@ -85,12 +86,12 @@
   <section class="result-card" id="resultCard">
     <div class="result-header">
       <div>
-        <h2>Diode Result</h2>
+        <h2>Component Result</h2>
         <div class="result-code" id="resultCode">—</div>
         <div class="result-type" id="resultType">—</div>
         <div class="result-family" id="resultFamily" style="display:none;">—</div>
       </div>
-      <div class="diode-symbol" aria-hidden="true">
+      <div class="diode-symbol" aria-hidden="true" id="symbolContainer">
         <svg viewBox="0 0 140 60" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent)">
           <line x1="5" y1="30" x2="40" y2="30"></line>
           <polygon points="40,12 75,30 40,48" fill="currentColor" opacity="0.25"></polygon>
@@ -101,78 +102,85 @@
         </svg>
       </div>
     </div>
-    <div id="frBreakdownContainer"></div>
+    <div id="breakdownContainer"></div>
+    <div id="pinoutContainer"></div>
     <div class="result-grid" id="resultGrid"></div>
   </section>
 
-  <!-- Hide / Show builder + package reference -->
-  <div class="toggle-panels-wrap" id="togglePanelsWrap" style="display:none;">
-    <button class="btn-toggle-panels" id="togglePanelsBtn" aria-expanded="true" aria-controls="panelsCollapsible">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M17.94 6.06A10 10 0 1 0 6.06 17.94"></path>
-        <polyline points="22 2 11 13"></polyline>
-        <polyline points="22 2 15 2 22 9"></polyline>
-      </svg>
-      <span id="togglePanelsLabel">Hide Builder &amp; Package Reference</span>
-      <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <polyline points="18 15 12 9 6 15"></polyline>
-      </svg>
-    </button>
-  </div>
-
-  <!-- Collapsible: Builder panels + Package Reference -->
-  <div class="panels-collapsible" id="panelsCollapsible">
-
-    <section class="selection-panel active" id="panel1">
-      <div class="card">
-        <h2 class="card-title"><span class="step">1</span> Select Diode Speed / Family</h2>
-        <p class="card-sub">Choose the diode's speed / technology type. Sets the first characters of the code.</p>
-        <div class="option-grid" id="speedGrid"></div>
-        <div class="summary" id="speedSummary"></div>
+  <!-- MOSFET DECODER INFO CARD -->
+  <section class="card" id="mosfetInfoCard">
+    <h2 class="card-title">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--mosfet)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"></rect><path d="M9 9h6v6H9z"></path><path d="M9 3v6"></path><path d="M15 3v6"></path><path d="M9 15v6"></path><path d="M15 15v6"></path></svg>
+      <span style="color: var(--mosfet);">MOSFET</span> Code Decoder Rules
+    </h2>
+    <p class="card-sub">How to read MOSFET part numbers like <strong>7N65</strong>, <strong>11N65</strong>, <strong>13NM60</strong>, <strong>10P06</strong>.</p>
+    <div class="decoder-info">
+      <div class="decoder-rule">
+        <div class="decoder-rule-title">① Current Rating</div>
+        <div class="decoder-rule-desc">Numbers <strong>before</strong> the channel letter = continuous drain current in Amps.<br><code>7</code>N65 → <strong>7A</strong><br><code>11</code>N65 → <strong>11A</strong></div>
       </div>
-    </section>
-
-    <section class="selection-panel" id="panel2">
-      <div class="card">
-        <h2 class="card-title"><span class="step">2</span> Select Diode Current</h2>
-        <p class="card-sub" id="currentSub">Choose the forward current rating code.</p>
-        <div class="option-grid" id="currentGrid"></div>
-        <div class="summary" id="currentSummary"></div>
+      <div class="decoder-rule">
+        <div class="decoder-rule-title">② Channel Type</div>
+        <div class="decoder-rule-desc">Letter in the middle = channel type.<br><code>N</code> = N-channel (most common)<br><code>NM</code> = N-channel (special)<br><code>P</code> = P-channel<br><code>R</code> = logic-level N-channel</div>
       </div>
-    </section>
-
-    <section class="selection-panel" id="panel3">
-      <div class="card">
-        <h2 class="card-title"><span class="step">3</span> Select Diode Voltage</h2>
-        <p class="card-sub" id="voltageSub">Choose the reverse voltage code.</p>
-        <div class="option-grid" id="voltageGrid"></div>
-        <div class="summary" id="voltageSummary"></div>
+      <div class="decoder-rule">
+        <div class="decoder-rule-title">③ Voltage Rating</div>
+        <div class="decoder-rule-desc">Numbers <strong>after</strong> the channel letter = Vds breakdown voltage × 10.<br>7N<code>65</code> → 65 × 10 = <strong>650V</strong><br>13NM<code>60</code> → 60 × 10 = <strong>600V</strong></div>
       </div>
-    </section>
-
-    <!-- PACKAGE REFERENCE TABLE -->
-    <section class="card">
-      <h2 class="card-title">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
-        SMD Diode Package Reference
-      </h2>
-      <p class="card-sub">Physical dimensions and typical current handling for common SMD diode packages.</p>
-      <div style="overflow-x:auto;">
-        <table class="pkg-table" id="pkgTable">
-          <thead>
-            <tr>
-              <th>Package</th>
-              <th>Dimensions (L × W)</th>
-              <th>Typical Current</th>
-              <th>Typical Application</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
+      <div class="decoder-rule">
+        <div class="decoder-rule-title">④ Suffix Letter</div>
+        <div class="decoder-rule-desc">Optional trailing letter = package variant or revision.<br><code>C</code>, <code>A</code>, <code>S</code> = package/revision code<br>e.g. 7N65<code>C</code> → TO-220C package</div>
       </div>
-    </section>
+    </div>
+  </section>
 
-  </div><!-- /.panels-collapsible -->
+  <section class="selection-panel active" id="panel1">
+    <div class="card">
+      <h2 class="card-title"><span class="step">1</span> Select Diode Speed / Family</h2>
+      <p class="card-sub">Choose the diode's speed / technology type. Sets the first characters of the code.</p>
+      <div class="option-grid" id="speedGrid"></div>
+      <div class="summary" id="speedSummary"></div>
+    </div>
+  </section>
+
+  <section class="selection-panel" id="panel2">
+    <div class="card">
+      <h2 class="card-title"><span class="step">2</span> Select Diode Current</h2>
+      <p class="card-sub" id="currentSub">Choose the forward current rating code.</p>
+      <div class="option-grid" id="currentGrid"></div>
+      <div class="summary" id="currentSummary"></div>
+    </div>
+  </section>
+
+  <section class="selection-panel" id="panel3">
+    <div class="card">
+      <h2 class="card-title"><span class="step">3</span> Select Diode Voltage</h2>
+      <p class="card-sub" id="voltageSub">Choose the reverse voltage code.</p>
+      <div class="option-grid" id="voltageGrid"></div>
+      <div class="summary" id="voltageSummary"></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2 class="card-title">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
+      SMD Diode Package Reference
+    </h2>
+    <p class="card-sub">Physical dimensions and typical current handling for common SMD diode packages.</p>
+    <div style="overflow-x:auto;">
+      <table class="pkg-table" id="pkgTable">
+        <thead>
+          <tr>
+            <th>Package</th>
+            <th>Dimensions (L × W)</th>
+            <th>Typical Current</th>
+            <th>Typical Application</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
 
   <section class="history-section">
     <h3>⭐ Favorite Codes</h3>
@@ -185,7 +193,7 @@
   </section>
 
   <footer>
-    <p>SMD Diode Code Explorer · Offline-capable · HTML, CSS &amp; Vanilla JS</p>
+    <p>SMD Diode &amp; MOSFET Code Explorer · Offline-capable · HTML, CSS &amp; Vanilla JS</p>
     <p>⚠️ Ratings are reference values. Always verify against the manufacturer's datasheet.</p>
   </footer>
 </div>
